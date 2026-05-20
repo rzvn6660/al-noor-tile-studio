@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Al-Noor Showroom | Admin Corporate Dashboard</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    body {
+      overflow-y: auto !important;
+      background-color: #05050c;
+    }
+    
+    .admin-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      min-height: 100vh;
+      margin-top: 80px;
+    }
+    
+    @media (min-width: 900px) {
+      .admin-layout {
+        grid-template-columns: 240px 1fr;
+      }
+    }
+    
+    /* Luxury Sidebar */
+    .sidebar {
+      background: rgba(8, 8, 16, 0.6);
+      border-right: 1px solid var(--glass-border);
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .nav-btn {
+      background: none;
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+      padding: 12px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .nav-btn:hover {
+      color: var(--gold-primary);
+      background: rgba(201, 169, 110, 0.05);
+    }
+    
+    .nav-btn.active {
+      color: var(--gold-primary);
+      background: rgba(201, 169, 110, 0.1);
+      border-color: rgba(201, 169, 110, 0.3);
+    }
+    
+    /* Main Content Area */
+    .main-content {
+      padding: 40px 25px;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.4s ease-out;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 35px;
+    }
+    
+    .stat-card {
+      padding: 24px;
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--gold-primary);
+      margin-top: 8px;
+    }
+    
+    /* Layout widgets */
+    .widget-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 25px;
+    }
+    
+    @media (min-width: 1000px) {
+      .widget-grid {
+        grid-template-columns: 2fr 1fr;
+      }
+    }
+    
+    /* Ingestion layout */
+    .ingest-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    @media (min-width: 700px) {
+      .ingest-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    .dropzone {
+      border: 2px dashed rgba(201, 169, 110, 0.3);
+      border-radius: 8px;
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.01);
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .dropzone:hover {
+      border-color: var(--gold-primary);
+      background: rgba(201, 169, 110, 0.03);
+    }
+    
+    .dropzone input {
+      display: none;
+    }
+    
+    /* Table grids */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid var(--glass-border);
+      background: rgba(5, 5, 10, 0.3);
+    }
+    
+    table.admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+    
+    table.admin-table th {
+      background: rgba(201, 169, 110, 0.08);
+      color: var(--gold-primary);
+      padding: 12px 16px;
+      font-weight: 600;
+      border-bottom: 1px solid var(--glass-border);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+    
+    table.admin-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-primary);
+    }
+    
+    .table-control {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    
+    /* Switches */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 34px;
+      height: 20px;
+    }
+    
+    .switch input { opacity: 0; width: 0; height: 0; }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: rgba(255,255,255,0.1);
+      transition: .4s;
+      border-radius: 20px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .slider { background-color: var(--gold-primary); }
+    input:checked + .slider:before { transform: translateX(14px); }
+    
+    /* Custom Request list card */
+    .request-card {
+      padding: 20px;
+      margin-bottom: 16px;
+      border-left: 3px solid var(--gold-primary);
+    }
+    
+    .request-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .badge {
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      display: inline-block;
+    }
+    .badge-floor { background: rgba(201, 169, 110, 0.15); color: var(--gold-primary); }
+    .badge-wall { background: rgba(122, 184, 245, 0.15); color: var(--blue-accent); }
+    .badge-accent { background: rgba(168, 230, 192, 0.15); color: var(--accent-green); }
+    
+    .live-swatch {
+      width: 100%;
+      height: 140px;
+      border-radius: 8px;
+      border: 1px solid var(--glass-border);
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+      margin-bottom: 16px;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .btn-action {
+      background: rgba(201,169,110,0.1);
+      border: 1px solid var(--gold-primary);
+      color: var(--gold-primary);
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .btn-action:hover {
+      background: var(--gold-primary);
+      color: #05050c;
+    }
+    .btn-danger {
+      background: rgba(248,113,113,0.1);
+      border-color: #f87171;
+      color: #f87171;
+    }
+    .btn-danger:hover {
+      background: #f87171;
+      color: #05050c;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background static stars viewport -->
+  <div id="canvas-container" style="pointer-events: none; opacity: 0.3; z-index: 1;"></div>
+
+  <header style="z-index: 100;">
+    <div class="brand" onclick="window.location.href='/'">
+      <h1>Al-Noor</h1>
+      <p>Luxury Showroom Portal • Corporate Suite</p>
+    </div>
+    <div class="view-toggles">
+      <button class="btn-toggle" onclick="window.location.href='/'">
+        <span>🌌</span> Live Showroom
+      </button>
+      <button class="btn-toggle active">
+        <span>🛡️</span> Admin Console
+      </button>
+    </div>
+  </header>
+
+  <div class="admin-layout" style="z-index: 10; position: relative;">
+    
+    <!-- Sidebar navigation -->
+    <div class="sidebar">
+      <div style="font-size: 10px; font-weight: 700; color: var(--gold-primary); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 15px; padding-left: 10px;">Navigation</div>
+      <button class="nav-btn active" id="btn-tab-dashboard" onclick="switchTab('dashboard')">
+        <span>📊</span> Executive Dashboard
+      </button>
+      <button class="nav-btn" id="btn-tab-products" onclick="switchTab('products')">
+        <span>📋</span> Product Manager
+      </button>
+      <button class="nav-btn" id="btn-tab-import" onclick="switchTab('import')">
+        <span>🚀</span> AI Catalog Ingestor
+      </button>
+      <button class="nav-btn" id="btn-tab-requests" onclick="switchTab('requests')">
+        <span>🚚</span> Sample Requests
+      </button>
+      <button class="nav-btn" id="btn-tab-settings" onclick="switchTab('settings')">
+        <span>🤖</span> Noor AI Settings
+      </button>
+    </div>
+
+    <!-- Main view panels container -->
+    <div class="main-content">
+      
+      <!-- TAB 1: EXECUTIVE DASHBOARD -->
+      <div class="tab-content active" id="tab-dashboard">
+        <div class="stats-grid">
+          <div class="glass-panel stat-card">
+            <div style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Total Materials</div>
+            <div class="stat-value" id="stat-total">0</div>
+          </div>
+          <div class="glass-panel stat-card">
+            <div style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Visible on Showroom</div>
+            <div class="stat-value" style="color: #4ade80;" id="stat-visible">0</div>
+          </div>
+          <div class="glass-panel stat-card">
+            <div style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Hidden Products</div>
+            <div class="stat-value" style="color: #f87171;" id="stat-hidden">0</div>
+          </div>
+          <div class="glass-panel stat-card">
+            <div style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Sample Requests Logged</div>
+            <div class="stat-value" id="stat-requests">0</div>
+          </div>
+        </div>
+
+        <div class="widget-grid">
+          <!-- Popular Category Chart lists -->
+          <div class="glass-panel" style="padding: 24px;">
+            <div class="admin-title">Popular Product Sections</div>
+            <div id="dashboard-categories-container" style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
+               <!-- Loaded dynamically -->
+            </div>
+          </div>
+          
+          <!-- Recent Uploads block -->
+          <div class="glass-panel" style="padding: 24px;">
+             <div class="admin-title">Recent Ingestion logs</div>
+             <div id="dashboard-uploads-container" style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px; font-size: 12px;">
+                <!-- Loaded dynamically -->
+             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: PRODUCT MANAGER (CRUD) -->
+      <div class="tab-content" id="tab-products">
+        <div class="widget-grid">
+          <!-- CRUD Table grid -->
+          <div class="glass-panel" style="padding: 24px;">
+            <div class="admin-title">
+              <span>Catalog Inventory Manager</span>
+              <button class="btn-action" onclick="saveAllGridChanges()" style="background: rgba(74,222,128,0.1); border-color: #4ade80; color: #4ade80;">💾 Sync Inventory Changes</button>
+            </div>
+            
+            <div class="table-container" style="margin-top: 20px;">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Swatch</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price (AED)</th>
+                    <th>In Stock</th>
+                    <th>Visible</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-table-body">
+                  <!-- Loaded dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Dynamic Visual Editor Sidebar -->
+          <div class="glass-panel" style="padding: 24px; position: sticky; top: 100px; height: fit-content;">
+            <div class="admin-title">Visual Slabs Editor</div>
+            
+            <div class="live-swatch" id="preview-swatch" style="background-color: #c9a96e;"></div>
+
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" class="form-control" id="preview-name" oninput="updateActivePreviewFromFields()">
+            </div>
+            <div class="form-group">
+              <label>Tile Color (Hex)</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="color" id="preview-hex-picker" style="width: 38px; height: 38px; border: none; border-radius: 6px; cursor: pointer;" oninput="document.getElementById('preview-hex').value = this.value; updateActivePreviewFromFields()">
+                <input type="text" class="form-control" id="preview-hex" style="flex: 1;" oninput="document.getElementById('preview-hex-picker').value = this.value; updateActivePreviewFromFields()">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <select class="form-control" id="preview-category" style="background: #080810;" onchange="updateActivePreviewFromFields()">
+                <option value="floor">Floor Tile</option>
+                <option value="wall">Wall Cladding</option>
+                <option value="accent">Accent Tile</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Custom Image URL</label>
+              <input type="text" class="form-control" id="preview-image-url" oninput="updateActivePreviewFromFields()" placeholder="/static/images/tiles/example.jpg">
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+              <button class="btn-sample" style="flex: 1;" onclick="resetPreviewToSelected()">Reset</button>
+              <button class="btn-sample" style="flex: 1; background: var(--gold-primary); color: #05050c; border: none;" onclick="saveSelectedPreviewDetails()">Update Swatch</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: AI CATALOG INGESTION -->
+      <div class="tab-content" id="tab-import">
+        <div class="glass-panel" style="padding: 28px;">
+          <div class="admin-title" style="margin-bottom: 20px;">AI-Assisted Document Ingestor</div>
+          
+          <div class="ingest-grid">
+            <label class="dropzone" for="pdf-file-input">
+              <span style="font-size: 32px;">📸</span>
+              <div style="font-size: 14px; font-weight: 600; color: var(--gold-primary);">Local Document Upload</div>
+              <div style="font-size: 11px; color: var(--text-secondary);">Upload PDF catalog or catalog Images (JPG, PNG, WEBP)</div>
+              <input type="file" id="pdf-file-input" accept=".pdf,.png,.jpg,.jpeg,.webp" onchange="handleLocalPdfUpload(event)">
+            </label>
+            
+            <div class="dropzone" style="cursor: default; border-style: solid;" onclick="event.stopPropagation()">
+              <span style="font-size: 32px;">🔗</span>
+              <div style="font-size: 14px; font-weight: 600; color: var(--gold-primary);">Pasted Google Drive Link</div>
+              <input type="text" id="gdrive-url" class="form-control" style="width: 90%; margin-top: 6px; font-size: 11px; padding: 8px;" placeholder="Paste Anyone-with-link Google Drive PDF...">
+              <button class="btn-action" style="margin-top: 10px; width: 90%;" onclick="importFromGoogleDrive()">Ingest PDF Catalog</button>
+            </div>
+          </div>
+
+          <!-- Progress Ingestion -->
+          <div id="ingest-progress" style="display: none; background: rgba(201,169,110,0.05); border: 1px solid rgba(201,169,110,0.2); padding: 16px; border-radius: 6px; align-items: center; justify-content: center; gap: 12px; margin-top: 25px;">
+            <div style="width: 24px; height: 24px; border: 2px solid rgba(201,169,110,0.1); border-top-color: var(--gold-primary); border-radius: 50%; animation: spin 1s infinite linear;"></div>
+            <div style="font-size: 13px; color: var(--gold-primary); letter-spacing: 0.5px;" id="ingest-progress-text">Processing catalog text using Gemini 2.5 Flash API...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: SAMPLE REQUEST MANAGEMENT -->
+      <div class="tab-content" id="tab-requests">
+        <div class="glass-panel" style="padding: 28px;">
+          <div class="admin-title" style="margin-bottom: 20px;">Customer Sample Requests</div>
+          <div id="requests-list-container">
+             <!-- Requests card elements loaded dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: AI PROMPTS & SETTINGS -->
+      <div class="tab-content" id="tab-settings">
+        <div class="glass-panel" style="padding: 28px;">
+          <div class="admin-title">Noor AI Behavior Settings</div>
+          <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 25px; text-transform: uppercase;">Rewrite Noor's Sales Guidance and Personality dynamically</div>
+          
+          <div class="form-group">
+            <label>Noor Chat Agent System Instruction</label>
+            <textarea class="form-control" id="settings-system-prompt" rows="8" style="background: #080810; font-family: inherit; font-size: 13px; line-height: 1.6; padding: 12px;" placeholder="Enter system instruction..."></textarea>
+          </div>
+          
+          <div class="form-group" style="margin-top: 20px;">
+            <label>Sales Recommendation Style</label>
+            <select class="form-control" id="settings-recommendation-style" style="background: #080810;">
+              <option value="premium">Premium Showroom (Soft Guidance)</option>
+              <option value="aggressive">Aggressive Sales (Direct sample requests closures)</option>
+              <option value="technical">Technical Focus (Detailed dimensions and PBR physical specs)</option>
+            </select>
+          </div>
+          
+          <button class="btn-sample" style="background: var(--gold-primary); color: #05050c; border: none; margin-top: 30px; padding: 12px 25px; font-weight: 700;" onclick="saveAiSettingsDetails()">Update AI Settings</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- AI Review Popup modal -->
+  <div class="modal-overlay" id="review-modal">
+    <div class="modal-box glass-panel interactive" style="max-width: 650px; width: 95%;">
+      <button class="modal-close" onclick="closeReviewModal()">✕</button>
+      <div class="modal-title">✨ AI Ingestion Review</div>
+      <div class="modal-subtitle">Verify, edit, and click Save to sync extracted tiles into the 3D Showroom</div>
+
+      <div class="table-container" style="max-height: 280px; overflow-y: auto; margin-bottom: 20px;">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Material</th>
+              <th>Category</th>
+              <th>Finish</th>
+              <th>Price</th>
+              <th>Color Swatch</th>
+              <th>Visual Image</th>
+              <th>Source Page</th>
+              <th>Confidence</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="review-table-body">
+            <!-- AI extracted items list -->
+          </tbody>
+        </table>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button class="btn-sample" style="flex: 1;" onclick="closeReviewModal()">Discard Ingestion</button>
+        <button class="btn-sample" style="flex: 1; background: #4ade80; color: var(--bg-color); border: none;" onclick="commitExtractedTiles()">📦 Save & Sync to Showroom</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+  </style>
+
+  <!-- Static Stars Background Script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    let scene, camera, renderer, stars;
+    function initBackground() {
+      const container = document.getElementById('canvas-container');
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 30;
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      container.appendChild(renderer.domElement);
+      
+      const count = 400;
+      const geo = new THREE.BufferGeometry();
+      const pos = new Float32Array(count * 3);
+      for (let i=0; i<count*3; i+=3) {
+        pos[i] = (Math.random() - 0.5) * 100;
+        pos[i+1] = (Math.random() - 0.5) * 100;
+        pos[i+2] = (Math.random() - 0.5) * 100;
+      }
+      geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      const mat = new THREE.PointsMaterial({ color: '#c9a96e', size: 0.15, transparent: true, opacity: 0.6 });
+      stars = new THREE.Points(geo, mat);
+      scene.add(stars);
+      
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+      animate();
+    }
+    function animate() {
+      requestAnimationFrame(animate);
+      if (stars) stars.rotation.y += 0.0006;
+      renderer.render(scene, camera);
+    }
+    document.addEventListener('DOMContentLoaded', initBackground);
+  </script>
+
+  <!-- Admin business portal Javascript controller -->
+  <script>
+    let activeCatalog = [];
+    let selectedTileId = null;
+    let extractedTiles = [];
+    let activeTab = 'dashboard';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Load initially
+      loadDashboardStats();
+      loadAdminCatalog();
+      loadSampleRequestsList();
+      loadAiSettingsDetails();
+    });
+
+    function switchTab(tabId) {
+      activeTab = tabId;
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+      document.getElementById(`btn-tab-${tabId}`).classList.add('active');
+      document.getElementById(`tab-${tabId}`).classList.add('active');
+      
+      // Auto-load triggers
+      if (tabId === 'dashboard') loadDashboardStats();
+      else if (tabId === 'requests') loadSampleRequestsList();
+    }
+
+    async function loadDashboardStats() {
+      try {
+        const res = await fetch('/admin/api/stats');
+        const data = await res.json();
+        if (data.success && data.stats) {
+          const stats = data.stats;
+          document.getElementById('stat-total').innerText = stats.total_products;
+          document.getElementById('stat-visible').innerText = stats.visible_products;
+          document.getElementById('stat-hidden').innerText = stats.hidden_products;
+          document.getElementById('stat-requests').innerText = stats.requests_count;
+
+          // Render categories count bars
+          const catContainer = document.getElementById('dashboard-categories-container');
+          catContainer.innerHTML = '';
+          stats.popular_tiles.forEach(cat => {
+            const bar = document.createElement('div');
+            bar.style.display = 'flex';
+            bar.style.flexDirection = 'column';
+            bar.style.gap = '6px';
+            
+            const maxVal = Math.max(...stats.popular_tiles.map(c => c.count)) || 1;
+            const pct = (cat.count / maxVal) * 100;
+            
+            bar.innerHTML = `
+              <div style="display:flex; justify-content:space-between; font-size:12px;">
+                <span>${cat.name}</span>
+                <span style="color:var(--gold-primary); font-weight:700;">${cat.count} Slabs</span>
+              </div>
+              <div style="background:rgba(255,255,255,0.05); height:8px; border-radius:4px; overflow:hidden;">
+                <div style="background:var(--gold-primary); width:${pct}%; height:100%; border-radius:4px;"></div>
+              </div>
+            `;
+            catContainer.appendChild(bar);
+          });
+
+          // Render recent uploads log list
+          const uploadContainer = document.getElementById('dashboard-uploads-container');
+          uploadContainer.innerHTML = '';
+          stats.recent_uploads.forEach(log => {
+             const logEl = document.createElement('div');
+             logEl.style.background = 'rgba(255,255,255,0.02)';
+             logEl.style.padding = '10px';
+             logEl.style.borderRadius = '4px';
+             logEl.style.border = '1px solid rgba(255,255,255,0.05)';
+             logEl.innerHTML = `📄 <strong>${log}</strong> - AI extraction synced successfully.`;
+             uploadContainer.appendChild(logEl);
+          });
+        }
+      } catch (err) {
+        console.error("Dashboard stats error:", err);
+      }
+    }
+
+    async function loadAdminCatalog() {
+      try {
+        const res = await fetch('/api/tiles?visible_only=false'); // Load all tiles for admin inventory
+        const data = await res.json();
+        if (data.success && data.tiles) {
+          activeCatalog = data.tiles;
+          renderAdminTable();
+          if (activeCatalog.length > 0 && selectedTileId === null) {
+            selectTileForEditing(activeCatalog[0].id);
+          }
+        }
+      } catch (err) {
+         console.error(err);
+      }
+    }
+
+    function renderAdminTable() {
+      const tbody = document.getElementById('admin-table-body');
+      tbody.innerHTML = '';
+
+      activeCatalog.forEach(tile => {
+        const tr = document.createElement('tr');
+        tr.style.cursor = 'pointer';
+        tr.onclick = () => selectTileForEditing(tile.id);
+        
+        if (selectedTileId == tile.id) {
+          tr.style.background = 'rgba(201, 169, 110, 0.05)';
+        }
+
+        // Swatch & Image Thumbnail
+        const tdSwatch = document.createElement('td');
+        const swContainer = document.createElement('div');
+        swContainer.style.display = 'flex';
+        swContainer.style.alignItems = 'center';
+        swContainer.style.gap = '8px';
+
+        const sw = document.createElement('div');
+        sw.className = 'tile-swatch';
+        sw.style.width = '18px';
+        sw.style.height = '18px';
+        sw.style.flexShrink = '0';
+        sw.style.backgroundColor = tile.hex_color;
+        swContainer.appendChild(sw);
+
+        if (tile.thumbnail_url || tile.image_url) {
+          const img = document.createElement('img');
+          img.src = tile.thumbnail_url || tile.image_url;
+          img.style.width = '24px';
+          img.style.height = '24px';
+          img.style.objectFit = 'cover';
+          img.style.borderRadius = '2px';
+          img.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+          swContainer.appendChild(img);
+        }
+        tdSwatch.appendChild(swContainer);
+        tr.appendChild(tdSwatch);
+
+        // Name
+        const tdName = document.createElement('td');
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.className = 'table-control';
+        nameInput.value = tile.name;
+        nameInput.style.width = '120px';
+        nameInput.onchange = (e) => { tile.name = e.target.value; updateActivePreviewFromFields(); };
+        nameInput.onclick = (e) => e.stopPropagation();
+        tdName.appendChild(nameInput);
+        tr.appendChild(tdName);
+
+        // Category
+        const tdCat = document.createElement('td');
+        const catSelect = document.createElement('select');
+        catSelect.className = 'table-control';
+        catSelect.innerHTML = `
+          <option value="floor" ${tile.category === 'floor'?'selected':''}>Floor</option>
+          <option value="wall" ${tile.category === 'wall'?'selected':''}>Wall</option>
+          <option value="accent" ${tile.category === 'accent'?'selected':''}>Accent</option>
+        `;
+        catSelect.onchange = (e) => { tile.category = e.target.value; updateActivePreviewFromFields(); };
+        catSelect.onclick = (e) => e.stopPropagation();
+        tdCat.appendChild(catSelect);
+        tr.appendChild(tdCat);
+
+        // Price
+        const tdPrice = document.createElement('td');
+        const priceInput = document.createElement('input');
+        priceInput.type = 'number';
+        priceInput.className = 'table-control';
+        priceInput.value = tile.price_aed;
+        priceInput.style.width = '60px';
+        priceInput.onchange = (e) => { tile.price_aed = parseFloat(e.target.value); };
+        priceInput.onclick = (e) => e.stopPropagation();
+        tdPrice.appendChild(priceInput);
+        tr.appendChild(tdPrice);
+
+        // In Stock switch
+        const tdStock = document.createElement('td');
+        const stockSwitch = createToggleSwitch(tile.in_stock || tile.stock, (checked) => {
+          tile.in_stock = checked;
+          tile.stock = checked;
+        });
+        tdStock.appendChild(stockSwitch);
+        tr.appendChild(tdStock);
+
+        // Visible switch
+        const tdVis = document.createElement('td');
+        const visSwitch = createToggleSwitch(tile.visible !== false, (checked) => {
+          tile.visible = checked;
+        });
+        tdVis.appendChild(visSwitch);
+        tr.appendChild(tdVis);
+
+        // Actions delete
+        const tdAct = document.createElement('td');
+        const delBtn = document.createElement('button');
+        delBtn.className = 'btn-action btn-danger';
+        delBtn.style.padding = '4px 8px';
+        delBtn.innerText = 'Delete';
+        delBtn.onclick = (e) => { e.stopPropagation(); deleteTileItem(tile.id); };
+        tdAct.appendChild(delBtn);
+        tr.appendChild(tdAct);
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function createToggleSwitch(isChecked, callback) {
+      const label = document.createElement('label');
+      label.className = 'switch';
+      label.onclick = (e) => e.stopPropagation();
+      
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.checked = isChecked;
+      input.onchange = (e) => callback(e.target.checked);
+      
+      const span = document.createElement('span');
+      span.className = 'slider';
+      
+      label.appendChild(input);
+      label.appendChild(span);
+      return label;
+    }
+
+    function selectTileForEditing(id) {
+      selectedTileId = id;
+      
+      document.querySelectorAll('#admin-table-body tr').forEach((row, i) => {
+        if (activeCatalog[i] && activeCatalog[i].id == selectedTileId) {
+          row.style.background = 'rgba(201, 169, 110, 0.05)';
+        } else {
+          row.style.background = 'none';
+        }
+      });
+      
+      const tile = activeCatalog.find(t => t.id == id);
+      if (!tile) return;
+
+      document.getElementById('preview-name').value = tile.name;
+      document.getElementById('preview-hex').value = tile.hex_color;
+      document.getElementById('preview-hex-picker').value = tile.hex_color;
+      document.getElementById('preview-category').value = tile.category;
+      document.getElementById('preview-image-url').value = tile.image_url || "";
+      
+      const swatch = document.getElementById('preview-swatch');
+      if (tile.image_url) {
+        swatch.style.backgroundImage = `url(${tile.image_url})`;
+        swatch.style.backgroundSize = 'cover';
+        swatch.style.backgroundPosition = 'center';
+      } else {
+        swatch.style.backgroundImage = 'none';
+        swatch.style.backgroundColor = tile.hex_color;
+      }
+    }
+
+    function updateActivePreviewFromFields() {
+      const hex = document.getElementById('preview-hex').value;
+      const imgUrl = document.getElementById('preview-image-url').value;
+      const swatch = document.getElementById('preview-swatch');
+      if (imgUrl) {
+        swatch.style.backgroundImage = `url(${imgUrl})`;
+        swatch.style.backgroundSize = 'cover';
+        swatch.style.backgroundPosition = 'center';
+      } else {
+        swatch.style.backgroundImage = 'none';
+        swatch.style.backgroundColor = hex;
+      }
+    }
+
+    function resetPreviewToSelected() {
+      if (selectedTileId) selectTileForEditing(selectedTileId);
+    }
+
+    function saveSelectedPreviewDetails() {
+      const tile = activeCatalog.find(t => t.id == selectedTileId);
+      if (!tile) return;
+
+      tile.name = document.getElementById('preview-name').value;
+      tile.hex_color = document.getElementById('preview-hex').value;
+      tile.category = document.getElementById('preview-category').value;
+      tile.image_url = document.getElementById('preview-image-url').value;
+      tile.thumbnail_url = tile.image_url;
+
+      renderAdminTable();
+      saveAllGridChanges();
+    }
+
+    async function saveAllGridChanges() {
+      try {
+        const res = await fetch('/admin/api/catalog/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tiles: activeCatalog })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert("Dynamic material inventory sync completed! 🌌");
+          loadAdminCatalog();
+        }
+      } catch (err) {
+        alert("Failed to synchronize active catalog details.");
+      }
+    }
+
+    async function deleteTileItem(id) {
+      if (!confirm("Are you sure you want to permanently delete this product?")) return;
+      try {
+        const res = await fetch('/admin/api/catalog/delete-tile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tile_id: id })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert("Tile deleted successfully!");
+          loadAdminCatalog();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Requests List Ingest
+    async function loadSampleRequestsList() {
+      try {
+        const res = await fetch('/admin/api/requests');
+        const data = await res.json();
+        if (data.success && data.requests) {
+          const container = document.getElementById('requests-list-container');
+          container.innerHTML = '';
+          
+          if (data.requests.length === 0) {
+            container.innerHTML = `<div style="font-size:12px; color:var(--text-secondary); text-align:center; padding:20px;">No sample requests logged yet.</div>`;
+            return;
+          }
+
+          data.requests.forEach(req => {
+            const card = document.createElement('div');
+            card.className = 'glass-panel request-card';
+            card.innerHTML = `
+              <div style="display:flex; justify-content:space-between; font-weight:600; font-size:14px;">
+                <span>🧑‍💼 ${req.name}</span>
+                <span style="font-size:10px; color:var(--gold-primary);">${req.created_at || 'Pending'}</span>
+              </div>
+              <div class="request-meta">
+                <span>📞 Phone: <strong>${req.phone}</strong></span>
+                <span>📍 Emirate: <strong>${req.emirate}</strong></span>
+                <span>🏡 Address: <strong>${req.address || 'Showroom Pickup'}</strong></span>
+              </div>
+              <div style="margin-top:12px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.03); font-size:12px;">
+                 📦 Requested Slabs: 
+                 <span class="badge badge-floor">${req.floor_tile}</span> 
+                 <span class="badge badge-wall">${req.wall_tile}</span>
+              </div>
+            `;
+            container.appendChild(card);
+          });
+        }
+      } catch (err) {
+         console.error(err);
+      }
+    }
+
+    // AI Settings Handlers
+    async function loadAiSettingsDetails() {
+      try {
+        const res = await fetch('/admin/api/settings');
+        const data = await res.json();
+        if (data.success && data.settings) {
+          document.getElementById('settings-system-prompt').value = data.settings.system_prompt;
+          document.getElementById('settings-recommendation-style').value = data.settings.recommendation_style;
+        }
+      } catch (err) {
+         console.error(err);
+      }
+    }
+
+    async function saveAiSettingsDetails() {
+      const prompt = document.getElementById('settings-system-prompt').value.trim();
+      const style = document.getElementById('settings-recommendation-style').value;
+
+      try {
+        const res = await fetch('/admin/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            system_prompt: prompt,
+            recommendation_style: style
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert("Noor AI sales instruction prompt updated successfully! 🤖🌌");
+          loadAiSettingsDetails();
+        } else {
+          alert("Error: " + data.error);
+        }
+      } catch (err) {
+         alert("Failed to update Noor AI settings.");
+      }
+    }
+
+    // Ingest PDF handlers
+    function showProgress(text) {
+      const bar = document.getElementById('ingest-progress');
+      document.getElementById('ingest-progress-text').innerText = text;
+      bar.style.display = 'flex';
+    }
+
+    function hideProgress() {
+      document.getElementById('ingest-progress').style.display = 'none';
+    }
+
+    async function handleLocalPdfUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (['png', 'jpg', 'jpeg', 'webp'].includes(ext)) {
+        showProgress("Analyzing catalog image using Gemini Vision OCR...");
+      } else {
+        showProgress("Reading local PDF catalog with fitz parser...");
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const res = await fetch('/admin/api/catalog/upload-pdf', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        hideProgress();
+        if (data.success && data.extracted_tiles) {
+          openReviewModal(data.extracted_tiles);
+        } else {
+          alert("Error: " + (data.error || "Failed to extract tiles from local file."));
+        }
+      } catch (err) {
+        hideProgress();
+        alert("Server failed to respond during extraction.");
+      }
+    }
+
+    async function importFromGoogleDrive() {
+      const url = document.getElementById('gdrive-url').value.trim();
+      if (!url) {
+        alert("Please paste a valid Google Drive sharing URL first!");
+        return;
+      }
+
+      showProgress("Contacting Google Drive servers & triggering GenAI extraction...");
+      try {
+        const res = await fetch('/admin/api/catalog/import-gdrive', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: url })
+        });
+        const data = await res.json();
+        hideProgress();
+        if (data.success && data.extracted_tiles) {
+          openReviewModal(data.extracted_tiles);
+        } else {
+          alert("Error: " + (data.error || "Google Drive file ingestion failed. Verify link permissions."));
+        }
+      } catch (err) {
+        hideProgress();
+        alert("Drive server request timed out.");
+      }
+    }
+
+    // Review Modal Ingest Review
+    function openReviewModal(tiles) {
+      extractedTiles = tiles;
+      const tbody = document.getElementById('review-table-body');
+      tbody.innerHTML = '';
+
+      extractedTiles.forEach((tile, index) => {
+        const tr = document.createElement('tr');
+        
+        const name = document.createElement('td');
+        name.innerText = tile.name;
+        tr.appendChild(name);
+
+        const cat = document.createElement('td');
+        const badge = document.createElement('span');
+        badge.className = `badge badge-${tile.category}`;
+        badge.innerText = tile.category;
+        cat.appendChild(badge);
+        tr.appendChild(cat);
+
+        const fin = document.createElement('td');
+        fin.innerText = tile.finish || 'Polished';
+        tr.appendChild(fin);
+
+        const price = document.createElement('td');
+        price.innerText = `AED ${tile.price_aed}/m²`;
+        tr.appendChild(price);
+
+        const swatchTd = document.createElement('td');
+        const container = document.createElement('div');
+        container.style.display = 'flex';
+        container.style.alignItems = 'center';
+        container.style.gap = '8px';
+        
+        const sw = document.createElement('div');
+        sw.className = 'tile-swatch';
+        sw.style.width = '20px';
+        sw.style.height = '20px';
+        sw.style.backgroundColor = tile.hex_color;
+        
+        const hexVal = document.createElement('span');
+        hexVal.style.fontSize = '10px';
+        hexVal.style.fontFamily = 'monospace';
+        hexVal.innerText = tile.hex_color;
+        
+        container.appendChild(sw);
+        container.appendChild(hexVal);
+        swatchTd.appendChild(container);
+        tr.appendChild(swatchTd);
+
+        // Visual Image Thumbnail column!
+        const imgTd = document.createElement('td');
+        if (tile.thumbnail_url || tile.image_url) {
+          const img = document.createElement('img');
+          img.src = tile.thumbnail_url || tile.image_url;
+          img.style.width = '40px';
+          img.style.height = '40px';
+          img.style.objectFit = 'cover';
+          img.style.borderRadius = '4px';
+          img.style.border = '1px solid rgba(255,255,255,0.1)';
+          imgTd.appendChild(img);
+        } else {
+          imgTd.innerHTML = `<span style="font-size:10px; color:var(--text-secondary);">No texture</span>`;
+        }
+        tr.appendChild(imgTd);
+
+        // Source Page
+        const pageTd = document.createElement('td');
+        pageTd.innerText = `Page ${tile.extracted_page || 1}`;
+        tr.appendChild(pageTd);
+
+        // Confidence
+        const confTd = document.createElement('td');
+        const pct = ((tile.extraction_confidence || 0.90) * 100).toFixed(0);
+        confTd.innerHTML = `<strong style="color:#4ade80;">${pct}%</strong>`;
+        tr.appendChild(confTd);
+
+        // Override Action Button
+        const actTd = document.createElement('td');
+        const overrideBtn = document.createElement('button');
+        overrideBtn.className = 'btn-action';
+        overrideBtn.style.padding = '4px 8px';
+        overrideBtn.innerText = 'Override';
+        overrideBtn.onclick = () => overrideImage(index);
+        actTd.appendChild(overrideBtn);
+        tr.appendChild(actTd);
+
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('review-modal').classList.add('active');
+    }
+
+    function overrideImage(index) {
+      const currentUrl = extractedTiles[index].image_url || "";
+      const newUrl = prompt("Enter custom or extracted texture image URL for this tile:", currentUrl);
+      if (newUrl !== null) {
+        extractedTiles[index].image_url = newUrl.trim();
+        extractedTiles[index].thumbnail_url = newUrl.trim();
+        extractedTiles[index].extraction_confidence = 1.0;
+        openReviewModal(extractedTiles);
+      }
+    }
+
+    function closeReviewModal() {
+      document.getElementById('review-modal').classList.remove('active');
+      extractedTiles = [];
+    }
+
+    async function commitExtractedTiles() {
+      showProgress("Synchronizing new items into active database...");
+      try {
+        const res = await fetch('/admin/api/catalog/sync-extracted', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tiles: extractedTiles })
+        });
+        const data = await res.json();
+        hideProgress();
+        closeReviewModal();
+        if (data.success) {
+          alert("Congratulations! Your catalog has been expanded successfully! 🎉🌌");
+          loadAdminCatalog();
+        }
+      } catch (err) {
+        hideProgress();
+        alert("Failed to save newly extracted tiles.");
+      }
+    }
+  </script>
+
+</body>
+</html>

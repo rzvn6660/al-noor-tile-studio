@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Al-Noor Tile Studio | Antigravity 3D Showroom</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- Three.js Canvas Container -->
+  <div id="canvas-container"></div>
+
+  <!-- UI Overlay Layer -->
+  <div id="ui-overlay">
+    
+    <!-- Top Header -->
+    <header class="interactive">
+      <div class="brand" onclick="toggleView('galaxy')">
+        <h1>Al-Noor</h1>
+        <p>Tile Showroom • UAE</p>
+      </div>
+      <div class="view-toggles">
+        <button id="btn-view-galaxy" class="btn-toggle active" onclick="toggleView('galaxy')">
+          <span>🌌</span> Galaxy View
+        </button>
+        <button id="btn-view-room" class="btn-toggle" onclick="toggleView('room')">
+          <span>🏠</span> Room View
+        </button>
+      </div>
+    </header>
+
+    <!-- Floating Catalog Panel -->
+    <div id="catalog-panel" class="glass-panel interactive">
+      <div class="catalog-header">
+        <div style="font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--gold-primary);">SELECT ROOM SCENE</div>
+        <div class="room-selector">
+          <div class="room-chip active" onclick="setRoomType('living')" id="chip-living">Living Room</div>
+          <div class="room-chip" onclick="setRoomType('bathroom')" id="chip-bathroom">Bathroom</div>
+          <div class="room-chip" onclick="setRoomType('kitchen')" id="chip-kitchen">Kitchen</div>
+        </div>
+      </div>
+      
+      <div class="catalog-list" id="catalog-items-container">
+        <!-- Loaded dynamically from API -->
+      </div>
+
+      <div class="catalog-footer">
+        <button class="btn-sample" onclick="openSampleModal()">📦 Request Free Samples</button>
+      </div>
+    </div>
+
+    <!-- Active Tile Details HUD -->
+    <div id="hud-panel" class="glass-panel">
+      <div id="hud-name" style="font-size: 14px; font-weight: 600; color: var(--gold-primary);">Calacatta Gold</div>
+      <div id="hud-category" style="font-size: 9px; letter-spacing: 1px; color: var(--text-secondary); margin-top: 2px;">FLOOR TILE</div>
+      <div id="hud-price" style="font-size: 12px; font-family: monospace; color: var(--blue-accent); margin-top: 4px;">AED 320 / m²</div>
+      <div style="font-size: 10px; color: var(--text-secondary); margin-top: 4px; font-style: italic;">Click tile to apply to active room</div>
+    </div>
+
+    <!-- Bottom Showroom Physics Controls -->
+    <div class="bottom-controls interactive" id="galaxy-physics-controls">
+      <button class="btn-control" onclick="toggleGravity()" id="btn-gravity">
+        <span>🚀</span> Gravity OFF
+      </button>
+      <button class="btn-control" onclick="triggerExplode()">
+        <span>💥</span> Explode
+      </button>
+      <button class="btn-control" onclick="toggleOrbit()" id="btn-orbit">
+        <span>⭕</span> Orbit OFF
+      </button>
+    </div>
+
+    <!-- Bottom Controls for Room View -->
+    <div class="bottom-controls interactive" id="room-render-controls" style="display: none;">
+      <button class="btn-control" onclick="generateAiRender()" style="border-color: var(--gold-primary); background: rgba(201, 169, 110, 0.1);">
+        <span>✨</span> Generate Photorealistic Preview
+      </button>
+    </div>
+
+    <!-- Noor AI Chat Orb -->
+    <div id="noor-chat-orb" class="interactive" onclick="toggleChatWindow()">
+      <span>✨</span>
+      <div class="orb-pulse"></div>
+    </div>
+
+    <!-- Noor Chat Window -->
+    <div id="chat-window" class="glass-panel interactive">
+      <div class="chat-header">
+        <div class="chat-avatar">✨</div>
+        <div class="chat-title">
+          <h3>Noor</h3>
+          <p>Al-Noor Tile Advisor • Online</p>
+        </div>
+        <div style="margin-left: auto; width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px #4ade80;"></div>
+      </div>
+      <div class="chat-messages" id="chat-messages-container">
+        <div class="msg msg-noor">
+          Marhaba! 👋 I'm Noor, your UAE interior showroom assistant. What beautiful material can I help you choose today?
+        </div>
+      </div>
+      <div class="chat-chips">
+        <div class="chat-chip" onclick="sendQuickReply('Best tiles for bathrooms? 🛁')">Bathroom Tiles?</div>
+        <div class="chat-chip" onclick="sendQuickReply('How many boxes do I need? 📐')">Calculate boxes?</div>
+        <div class="chat-chip" onclick="sendQuickReply('Marble vs Granite? 🪨')">Marble vs Granite</div>
+        <div class="chat-chip" onclick="sendQuickReply('Delivery to Dubai? 🚚')">UAE Delivery?</div>
+      </div>
+      <div class="chat-input-area">
+        <input type="text" class="chat-input" id="chat-input-field" placeholder="Ask Noor anything..." onkeydown="if(event.key==='Enter') sendChatMessage()">
+        <button class="chat-send" onclick="sendChatMessage()">→</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- WhatsApp Sample Request Modal -->
+  <div class="modal-overlay" id="sample-modal">
+    <div class="modal-box glass-panel interactive">
+      <button class="modal-close" onclick="closeSampleModal()">✕</button>
+      <div class="modal-title">📦 Request Free Samples</div>
+      <div class="modal-subtitle">Direct delivery to your doorstep across the UAE</div>
+      
+      <div style="display: flex; gap: 8px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 16px;">
+        <div style="flex: 1; text-align: center;">
+          <div id="sample-floor-swatch" style="width: 32px; height: 32px; border-radius: 4px; margin: 0 auto 4px; border: 2px solid var(--gold-primary);"></div>
+          <div style="font-size: 9px; color: var(--gold-primary); font-weight: 600;">FLOOR TILE</div>
+          <div id="sample-floor-name" style="font-size: 11px; margin-top: 2px;">-</div>
+        </div>
+        <div style="flex: 1; text-align: center;">
+          <div id="sample-wall-swatch" style="width: 32px; height: 32px; border-radius: 4px; margin: 0 auto 4px; border: 2px solid var(--blue-accent);"></div>
+          <div style="font-size: 9px; color: var(--blue-accent); font-weight: 600;">WALL TILE</div>
+          <div id="sample-wall-name" style="font-size: 11px; margin-top: 2px;">-</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Your Full Name *</label>
+        <input type="text" id="form-name" class="form-control" placeholder="Ahmed Al Mansoori">
+      </div>
+      <div class="form-group">
+        <label>Phone Number *</label>
+        <input type="tel" id="form-phone" class="form-control" placeholder="+971 50 123 4567">
+      </div>
+      <div class="form-group">
+        <label>Select Emirate</label>
+        <select id="form-emirate" class="form-control" style="background: #080810;">
+          <option>Dubai</option>
+          <option>Abu Dhabi</option>
+          <option>Sharjah</option>
+          <option>Ajman</option>
+          <option>Ras Al Khaimah</option>
+          <option>Fujairah</option>
+          <option>Umm Al Quwain</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Delivery Address</label>
+        <input type="text" id="form-address" class="form-control" placeholder="Villa 12, Street 4, Al Barsha">
+      </div>
+      
+      <button class="btn-sample" style="background: #25d366; color: #fff; border: none; font-size: 12px; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="submitSampleRequest()">
+        <span>💬</span> Request Samples via WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <!-- AI Photorealistic Preview Modal -->
+  <div class="modal-overlay" id="render-modal">
+    <div class="modal-box glass-panel interactive" style="max-width: 480px; width: 95%;">
+      <button class="modal-close" onclick="closeRenderModal()">✕</button>
+      <div class="modal-title">✨ AI Dream Room Studio</div>
+      <div class="modal-subtitle">Generate custom, photorealistic designs featuring your tiles</div>
+
+      <!-- Active Tile Swatches indicator -->
+      <div style="display: flex; gap: 8px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 8px 10px; border-radius: 8px; margin-bottom: 14px;">
+        <div style="flex: 1; display: flex; align-items: center; gap: 6px; min-width: 0;">
+          <div id="ai-floor-swatch" style="width: 14px; height: 14px; border-radius: 3px; border: 1px solid var(--gold-primary); flex-shrink: 0; background: #c9a96e;"></div>
+          <div style="font-size: 10px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">
+            <span style="color: var(--text-secondary); font-size: 9px;">Floor:</span> <span id="ai-floor-name">Calacatta Gold</span>
+          </div>
+        </div>
+        <div style="flex: 1; display: flex; align-items: center; gap: 6px; min-width: 0;">
+          <div id="ai-wall-swatch" style="width: 14px; height: 14px; border-radius: 3px; border: 1px solid var(--blue-accent); flex-shrink: 0; background: #1a1a2e;"></div>
+          <div style="font-size: 10px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">
+            <span style="color: var(--text-secondary); font-size: 9px;">Wall:</span> <span id="ai-wall-name">Nero Marquina</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style selector -->
+      <div style="margin-bottom: 14px;">
+        <label style="display: block; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600;">Select Room Aesthetic Style</label>
+        <div style="display: flex; gap: 6px;" id="ai-style-selector">
+          <div class="room-chip active" style="flex: 1; padding: 8px 4px; font-size: 10px;" onclick="setAiStyle('palace')" id="ai-style-palace">🕌 Palace</div>
+          <div class="room-chip" style="flex: 1; padding: 8px 4px; font-size: 10px;" onclick="setAiStyle('penthouse')" id="ai-style-penthouse">🏙️ Penthouse</div>
+          <div class="room-chip" style="flex: 1; padding: 8px 4px; font-size: 10px;" onclick="setAiStyle('biophilic')" id="ai-style-biophilic">🌿 Oasis</div>
+          <div class="room-chip" style="flex: 1; padding: 8px 4px; font-size: 10px;" onclick="setAiStyle('minimalist')" id="ai-style-minimalist">🧊 Minimalist</div>
+        </div>
+      </div>
+
+      <!-- Custom text prompt -->
+      <div class="form-group" style="margin-bottom: 14px;">
+        <label style="font-weight: 600;">Room Imagination (Optional)</label>
+        <textarea id="ai-custom-prompt" class="form-control" style="height: 52px; resize: none; background: rgba(255,255,255,0.03); font-family: inherit; font-size: 11px; padding: 8px; line-height: 1.4;" placeholder="e.g. ambient warm sunset glow, indoor water features, brass hardware, luxurious UAE villa details..."></textarea>
+      </div>
+
+      <!-- Big Trigger Button -->
+      <button class="btn-sample" id="btn-generate-ai-room" style="background: var(--gold-primary); color: var(--bg-color); border: none; font-size: 11px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 6px;" onclick="executeAiRoomRender()">
+        <span>✨</span> Generate Dream Room Render
+      </button>
+
+      <!-- Preview container (Initially holds a placeholder prompt) -->
+      <div class="render-preview-container" style="height: 200px;">
+        <!-- Placeholder overlay -->
+        <div id="render-placeholder" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(8,8,16,0.6); padding: 20px; text-align: center;">
+          <span style="font-size: 24px; margin-bottom: 8px; opacity: 0.7;">✨</span>
+          <div style="font-size: 11px; color: var(--text-primary); font-weight: 600; letter-spacing: 0.5px;">YOUR GENERATIVE DESIGN AWAITS</div>
+          <div style="font-size: 10px; color: var(--text-secondary); margin-top: 4px; max-width: 280px; line-height: 1.4;">Select style and click Generate to see your tile choice beautifully clad in a custom room scene!</div>
+        </div>
+
+        <!-- Spinner loader -->
+        <div id="render-loader" style="position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: rgba(8,8,16,0.92); z-index: 10;">
+          <div style="width: 32px; height: 32px; border: 3px solid rgba(201,169,110,0.1); border-top-color: var(--gold-primary); border-radius: 50%; animation: spin 1s infinite linear;"></div>
+          <div style="font-size: 11px; margin-top: 12px; color: var(--gold-primary); letter-spacing: 1px; font-weight: 600;" id="render-loader-text">GENAI PIPELINE ENGAGED...</div>
+          <div style="font-size: 9px; margin-top: 4px; color: var(--text-secondary);">Designing your custom space</div>
+        </div>
+        <img id="render-img" class="render-image" alt="AI Render" style="z-index: 5;">
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button class="btn-sample" style="flex: 1; background: transparent; border-color: rgba(255,255,255,0.1); color: var(--text-secondary);" onclick="closeRenderModal()">Keep Exploring</button>
+        <button id="btn-save-render" class="btn-sample" style="flex: 1; background: rgba(201,169,110,0.15); border-color: var(--gold-primary); display: none;" onclick="saveRenderedImage()">💾 Save Render</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+
+  <!-- Load Scripts from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <!-- Custom Modular Frontend Scripts -->
+  <script src="/static/js/scene.js"></script>
+  <script src="/static/js/galaxy.js"></script>
+  <script src="/static/js/room.js"></script>
+  <script src="/static/js/ui.js"></script>
+  <script src="/static/js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,335 @@
+# Default Tile Catalog Data for Al-Noor Tile Studio
+# Used as a fallback if Supabase is not configured or offline
+
+DEFAULT_TILES = [
+    {
+        "id": "1",
+        "name": "Calacatta Gold",
+        "category": "floor",
+        "price_aed": 320,
+        "hex_color": "#f2ece0",
+        "roughness": 0.08,
+        "metalness": 0.05,
+        "in_stock": True,
+        "description": "Iconic Italian marble with warm gold veining"
+    },
+    {
+        "id": "2",
+        "name": "Nero Marquina",
+        "category": "wall",
+        "price_aed": 280,
+        "hex_color": "#1c1c1c",
+        "roughness": 0.12,
+        "metalness": 0.15,
+        "in_stock": True,
+        "description": "Deep black Spanish marble with white veins"
+    },
+    {
+        "id": "3",
+        "name": "Emperador Dark",
+        "category": "floor",
+        "price_aed": 240,
+        "hex_color": "#4a3428",
+        "roughness": 0.15,
+        "metalness": 0.08,
+        "in_stock": True,
+        "description": "Rich warm brown marble from Spain"
+    },
+    {
+        "id": "4",
+        "name": "Statuario White",
+        "category": "wall",
+        "price_aed": 450,
+        "hex_color": "#f8f6f2",
+        "roughness": 0.05,
+        "metalness": 0.02,
+        "in_stock": True,
+        "description": "Premium white marble with dramatic grey veining"
+    },
+    {
+        "id": "5",
+        "name": "Sahara Noir",
+        "category": "accent",
+        "price_aed": 580,
+        "hex_color": "#141414",
+        "roughness": 0.08,
+        "metalness": 0.35,
+        "in_stock": False,
+        "description": "Rare black marble with lustrous gold veins"
+    },
+    {
+        "id": "6",
+        "name": "Crema Marfil",
+        "category": "floor",
+        "price_aed": 180,
+        "hex_color": "#e8d8be",
+        "roughness": 0.25,
+        "metalness": 0.02,
+        "in_stock": True,
+        "description": "Classic warm beige Spanish marble"
+    },
+    {
+        "id": "7",
+        "name": "Arabescato",
+        "category": "wall",
+        "price_aed": 310,
+        "hex_color": "#ebebeb",
+        "roughness": 0.10,
+        "metalness": 0.05,
+        "in_stock": True,
+        "description": "White marble with intricate grey arabesque patterns"
+    },
+    {
+        "id": "8",
+        "name": "Portoro Gold",
+        "category": "accent",
+        "price_aed": 680,
+        "hex_color": "#0e0e0e",
+        "roughness": 0.04,
+        "metalness": 0.45,
+        "in_stock": True,
+        "description": "Prestigious black marble with brilliant gold veins"
+    },
+    {
+        "id": "9",
+        "name": "Carrara White",
+        "category": "floor",
+        "price_aed": 195,
+        "hex_color": "#dde2e3",
+        "roughness": 0.18,
+        "metalness": 0.02,
+        "in_stock": True,
+        "description": "The quintessential Italian white-grey marble"
+    },
+    {
+        "id": "10",
+        "name": "Blue Pearl",
+        "category": "wall",
+        "price_aed": 260,
+        "hex_color": "#3d4f5f",
+        "roughness": 0.08,
+        "metalness": 0.55,
+        "in_stock": True,
+        "description": "Norwegian granite with mesmerising blue shimmer"
+    },
+    {
+        "id": "11",
+        "name": "Kashmir White",
+        "category": "floor",
+        "price_aed": 210,
+        "hex_color": "#cec9bc",
+        "roughness": 0.20,
+        "metalness": 0.08,
+        "in_stock": True,
+        "description": "Elegant Indian granite with white & pink tones"
+    },
+    {
+        "id": "12",
+        "name": "Verde Guatemala",
+        "category": "accent",
+        "price_aed": 520,
+        "hex_color": "#2d5a3d",
+        "roughness": 0.12,
+        "metalness": 0.10,
+        "in_stock": False,
+        "description": "Lush deep green marble from Guatemala"
+    },
+    {
+        "id": "13",
+        "name": "Onyx Honey",
+        "category": "wall",
+        "price_aed": 890,
+        "hex_color": "#c8943a",
+        "roughness": 0.04,
+        "metalness": 0.20,
+        "in_stock": True,
+        "description": "Translucent amber onyx, perfect back-lit"
+    },
+    {
+        "id": "14",
+        "name": "Thassos White",
+        "category": "wall",
+        "price_aed": 380,
+        "hex_color": "#fafafa",
+        "roughness": 0.06,
+        "metalness": 0.02,
+        "in_stock": True,
+        "description": "Pure Greek island white marble"
+    },
+    {
+        "id": "15",
+        "name": "Absolute Black",
+        "category": "floor",
+        "price_aed": 190,
+        "hex_color": "#0a0a0a",
+        "roughness": 0.08,
+        "metalness": 0.05,
+        "in_stock": True,
+        "description": "Jet-black Indian granite, mirror polished"
+    },
+    {
+        "id": "16",
+        "name": "Desert Gold",
+        "category": "floor",
+        "price_aed": 350,
+        "hex_color": "#c9a96e",
+        "roughness": 0.14,
+        "metalness": 0.12,
+        "in_stock": True,
+        "description": "UAE-inspired warm gold travertine"
+    },
+    {
+        "id": "17",
+        "name": "Rosso Verona",
+        "category": "accent",
+        "price_aed": 410,
+        "hex_color": "#8b2a2a",
+        "roughness": 0.16,
+        "metalness": 0.06,
+        "in_stock": False,
+        "description": "Bold red Italian marble with fossil patterns"
+    },
+    {
+        "id": "18",
+        "name": "Silver Wave",
+        "category": "wall",
+        "price_aed": 220,
+        "hex_color": "#a8b4bc",
+        "roughness": 0.10,
+        "metalness": 0.30,
+        "in_stock": True,
+        "description": "Metallic silver quartzite with wave patterns"
+    },
+    {
+        "id": "19",
+        "name": "Arctic Storm",
+        "category": "floor",
+        "price_aed": 290,
+        "hex_color": "#e4eaee",
+        "roughness": 0.12,
+        "metalness": 0.18,
+        "in_stock": True,
+        "description": "Cool white granite with dramatic dark swirls"
+    },
+    {
+        "id": "20",
+        "name": "Forest Green",
+        "category": "wall",
+        "price_aed": 340,
+        "hex_color": "#3a4e3a",
+        "roughness": 0.20,
+        "metalness": 0.04,
+        "in_stock": True,
+        "description": "Deep forest green serpentine marble"
+    },
+    {
+        "id": "21",
+        "name": "Bianco Dolomite",
+        "category": "floor",
+        "price_aed": 370,
+        "hex_color": "#f0ece4",
+        "roughness": 0.09,
+        "metalness": 0.03,
+        "in_stock": True,
+        "description": "Pure white dolomite with subtle crystal veins"
+    },
+    {
+        "id": "22",
+        "name": "Copper Slate",
+        "category": "accent",
+        "price_aed": 460,
+        "hex_color": "#7a4a2e",
+        "roughness": 0.35,
+        "metalness": 0.25,
+        "in_stock": True,
+        "description": "Rustic copper-toned slate for feature walls"
+    },
+    {
+        "id": "23",
+        "name": "Skyline Blue",
+        "category": "wall",
+        "price_aed": 300,
+        "hex_color": "#4a6e8a",
+        "roughness": 0.14,
+        "metalness": 0.20,
+        "in_stock": False,
+        "description": "Inspired by Dubai's twilight sky palette"
+    },
+    {
+        "id": "24",
+        "name": "Sand Dune",
+        "category": "floor",
+        "price_aed": 165,
+        "hex_color": "#d4bc94",
+        "roughness": 0.30,
+        "metalness": 0.02,
+        "in_stock": True,
+        "description": "Sandstone evoking Arabian desert dunes"
+    },
+    {
+        "id": "25",
+        "name": "Pearl White",
+        "category": "wall",
+        "price_aed": 420,
+        "hex_color": "#f5f0e8",
+        "roughness": 0.06,
+        "metalness": 0.15,
+        "in_stock": True,
+        "description": "Luminous white with a pearlescent finish"
+    },
+    {
+        "id": "26",
+        "name": "Midnight Galaxy",
+        "category": "floor",
+        "price_aed": 550,
+        "hex_color": "#1a1a2e",
+        "roughness": 0.05,
+        "metalness": 0.40,
+        "in_stock": True,
+        "description": "Dark granite with star-like crystal flecks"
+    },
+    {
+        "id": "27",
+        "name": "Rose Aurora",
+        "category": "accent",
+        "price_aed": 490,
+        "hex_color": "#d4907a",
+        "roughness": 0.10,
+        "metalness": 0.08,
+        "in_stock": True,
+        "description": "Blush pink Portuguese marble, sunrise tones"
+    },
+    {
+        "id": "28",
+        "name": "Obsidian Black",
+        "category": "wall",
+        "price_aed": 320,
+        "hex_color": "#151515",
+        "roughness": 0.04,
+        "metalness": 0.50,
+        "in_stock": False,
+        "description": "Volcanic obsidian tile with mirror-like finish"
+    },
+    {
+        "id": "29",
+        "name": "Ivory Cream",
+        "category": "floor",
+        "price_aed": 175,
+        "hex_color": "#f0e8d4",
+        "roughness": 0.22,
+        "metalness": 0.01,
+        "in_stock": True,
+        "description": "Soft ivory limestone, timeless elegance"
+    },
+    {
+        "id": "30",
+        "name": "Lava Stone",
+        "category": "accent",
+        "price_aed": 380,
+        "hex_color": "#2e2e2e",
+        "roughness": 0.50,
+        "metalness": 0.02,
+        "in_stock": True,
+        "description": "Natural volcanic lava stone with matte finish"
+    }
+]
