@@ -59,7 +59,7 @@ SUPABASE_URL=https://your-supabase-url.supabase.co
 SUPABASE_KEY=your-supabase-anon-key-here
 
 # WhatsApp Business Dispatch
-WHATSAPP_NUMBER=971501234567
+WHATSAPP_NUMBER=**********
 ```
 
 ---
